@@ -1,0 +1,146 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silent Signals — Frontend</title>
+
+  <!-- ستايل الواجهة -->
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Auth -->
+    <section class="card" id="auth-card">
+      <div class="card-title">
+        <h2>الدخول / التسجيل</h2>
+      </div>
+      <div class="grid-2">
+        <!-- تسجيل -->
+        <div class="stack bordered">
+          <h3>تسجيل</h3>
+          <label>
+            <span>Email</span>
+            <input id="reg-email" type="email" placeholder="Email" autocomplete="email" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="reg-pass" type="password" placeholder="Password" autocomplete="new-password" />
+          </label>
+          <label>
+            <span>Display Name (اختياري)</span>
+            <input id="reg-name" type="text" placeholder="Display Name" />
+          </label>
+          <label>
+            <span>اللغة</span>
+            <select id="reg-lang">
+              <option value="ar">العربية (ar)</option>
+              <option value="en">English (en)</option>
+            </select>
+          </label>
+          <button id="btn-register">تسجيل حساب</button>
+        </div>
+
+        <!-- دخول -->
+        <div class="stack bordered">
+          <h3>دخول</h3>
+          <label>
+            <span>Email</span>
+            <input id="login-email" type="email" placeholder="Email" autocomplete="email" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="login-pass" type="password" placeholder="Password" autocomplete="current-password" />
+          </label>
+          <div class="row">
+            <button id="btn-login">تسجيل الدخول</button>
+            <button id="btn-logout" class="secondary" style="display:none;">تسجيل الخروج</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="card" id="profile-card" hidden>
+      <div class="card-title">
+        <h2>ملفي الشخصي</h2>
+      </div>
+
+      <div class="stack">
+        <div class="row"><span class="badge">UserId</span><span id="me-id" class="mono"></span></div>
+        <div class="row"><span class="badge">Email</span><span id="me-email" class="mono"></span></div>
+        <div class="row"><span class="badge">الاسم المعروض</span><span id="me-display" class="mono"></span></div>
+        <div class="row"><span class="badge">اللغة</span><span id="me-lang" class="mono"></span></div>
+      </div>
+
+      <h3>تعديل بياناتي</h3>
+      <div class="grid-2">
+        <label>
+          <span>اسم معروض جديد</span>
+          <input id="profile-displayname" type="text" placeholder="اسم معروض جديد" />
+        </label>
+        <label>
+          <span>اللغة</span>
+          <select id="profile-lang">
+            <option value="ar">العربية (ar)</option>
+            <option value="en">English (en)</option>
+          </select>
+        </label>
+      </div>
+      <button id="btn-profile-update">تحديث</button>
+    </section>
+
+    <!-- Admin -->
+    <section class="card" id="admin-card" hidden>
+      <div class="card-title">
+        <h2>لوحة الأدمن</h2>
+      </div>
+
+      <!-- Morse -->
+      <div class="group">
+        <h3>مورس</h3>
+        <div class="row">
+          <input id="morse-char" placeholder="حرف (A-Z)" />
+          <input id="morse-pattern" placeholder="نمط (.-..)" />
+          <button id="btn-morse-add">إضافة</button>
+        </div>
+        <div id="morse-list" class="list"></div>
+      </div>
+
+      <!-- Signs -->
+      <div class="group">
+        <h3>إشارات لغة الإشارة</h3>
+        <div class="row">
+          <input id="sign-type" placeholder="TokenType (Letter/Number/...)" />
+          <input id="sign-token" placeholder="Token (A/B/1)" />
+          <input id="sign-image" placeholder="Image URL (اختياري)" />
+          <button id="btn-sign-add">إضافة</button>
+        </div>
+        <div id="sign-list" class="list"></div>
+      </div>
+
+      <!-- Lessons -->
+      <div class="group">
+        <h3>الدروس</h3>
+        <div class="grid-2">
+          <input id="lesson-topic" placeholder="Topic (Morse/Sign)" />
+          <input id="lesson-title-ar" placeholder="عنوان (عربي)" />
+          <input id="lesson-title-en" placeholder="عنوان (إنجليزي)" />
+          <textarea id="lesson-body-ar" placeholder="محتوى (عربي)"></textarea>
+          <textarea id="lesson-body-en" placeholder="محتوى (إنجليزي)"></textarea>
+        </div>
+        <button id="btn-lesson-add">إضافة الدرس</button>
+        <div id="lesson-list" class="list"></div>
+      </div>
+    </section>
+
+    <!-- إشعارات -->
+    <div id="toast" class="toast" hidden></div>
+  </div>
+
+  <!-- تحميل سكربت الواجهة -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

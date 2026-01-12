@@ -1,0 +1,99 @@
+
+:root {
+  --bg: #f5f7fb;
+  --card: #fff;
+  --border: #e6e8ee;
+  --text: #222;
+  --muted: #666;
+  --primary: #3b82f6; /* أزرق */
+  --danger: #ef4444;  /* أحمر */
+  --ok: #10b981;      /* أخضر */
+  --radius: 12px;
+  --gap: 12px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.card-title { display: flex; align-items: center; justify-content: space-between; }
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+.stack { display: flex; flex-direction: column; gap: var(--gap); }
+.bordered { border: 1px dashed var(--border); border-radius: 8px; padding: 12px; }
+label { display: flex; flex-direction: column; gap: 6px; }
+label > span { font-size: 0.9rem; color: var(--muted); }
+input, select, textarea, button {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+textarea { min-height: 100px; }
+button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+button.secondary {
+  background: #eaeef6;
+  color: #333;
+  border: 1px solid var(--border);
+}
+button.danger {
+  background: var(--danger);
+}
+.row { display: flex; gap: 8px; align-items: center; }
+.badge {
+  background: #eef2ff;
+  color: #1f2937;
+  border: 1px solid #dbe1ff;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.list { display: grid; gap: 6px; margin-top: 8px; }
+.group { margin-top: 16px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+.toast.ok { background: var(--ok); }
+.toast.err { background: var(--danger); }
+.toast.info { background: #374151; }

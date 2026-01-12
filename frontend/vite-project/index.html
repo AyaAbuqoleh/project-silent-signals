@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لغات بلا صوت | Silent Signals</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 id="app-title">لغات بلا صوت | Silent Signals</h1>
+      <div class="lang-toggle">
+        <button id="lang-ar">AR</button>
+        <button id="lang-en">EN</button>
+        <!-- أزرار المصادقة -->
+        <button id="btn-register">Register</button>
+        <button id="btn-login">Login</button>
+        <button id="btn-logout" style="display:none;">Logout</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h2 id="converter-title">المحوّل</h2>
+
+        <label id="system-label" for="system">النظام</label>
+        <select id="system">
+          <option value="morse">مورس</option>
+          <option value="sign">إشارات</option>
+        </select>
+
+        <label id="text-label" for="text">النص</label>
+        <textarea id="text" rows="3" placeholder="اكتبي النص هنا..."></textarea>
+
+        <button id="convert-btn">حوّل الآن</button>
+      </div>
+
+      <!-- حسابي + السجل -->
+      <div id="profile-card" class="card" hidden>
+        <h3>حسابي</h3>
+        <div id="profile-info"></div>
+        <h3>سجل التحويلات</h3>
+        <div id="history-list" style="display:flex;flex-wrap:wrap;gap:.5rem;"></div>
+      </div>
+
+      <div class="card result">
+        <h3 id="result-title">النتيجة</h3>
+        <div id="output"></div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 Silent Signals</p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+﻿# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.vscode/*
+*.swp
+*.sln.ide/
+*.dbmdl
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
+dist/
+.cache/
+.env
+.env.*
