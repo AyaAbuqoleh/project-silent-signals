@@ -8,13 +8,16 @@ on:
     branches: [ "main", "dev" ]
 
 jobs:
-  build-test:
+  # =========================
+  # Frontend (Node/Vite)
+  # =========================
+  frontend:
+    name: Frontend (Node/Vite)
     runs-on: ubuntu-latest
 
-    # نخلي كل الأوامر تشتغل داخل مجلد frontend
     defaults:
       run:
-        working-directory: frontend
+        working-directory: frontend   # 👈 كل أوامر النود داخل frontend/
 
     steps:
       - name: Checkout repository
@@ -25,19 +28,11 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          # مهم: مسار الـ lock داخل frontend
           cache-dependency-path: 'frontend/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
 
-      # (اختياري) Lint/Test إن وُجدت سكربتاتها
-      # - name: Lint
-      #   run: npm run lint
-      # - name: Test
-      #   run: npm test -- --ci
-
-      # 👇 استخدمي grep (لينكس) لاكتشاف وجود سكربت build
       - name: Build (if build script exists)
         run: |
           if npm run | grep -qE '(^| )build( |:)'; then
@@ -47,7 +42,6 @@ jobs:
             echo "No build script found. Skipping build step."
           fi
 
-      # ارفعي ناتج البناء كـ Artifact إذا وُجد مجلد dist/
       - name: Upload build artifact (if dist exists)
         uses: actions/upload-artifact@v4
         with:
@@ -55,7 +49,6 @@ jobs:
           path: frontend/dist/**
           if-no-files-found: ignore
 
-      # (اختياري) ارفعي ملفات السورس أيضًا
       - name: Upload site sources
         uses: actions/upload-artifact@v4
         with:
@@ -68,3 +61,74 @@ jobs:
             frontend/**/*.jpg
             frontend/**/*.svg
             !frontend/node_modules/**
+
+  # =========================
+  # Backend (.NET)
+  # =========================
+  backend:
+    name: Backend (.NET restore/build with lock files)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # مبدئيًا بدون cache لتجنب الخطأ.
+      # بعد ما تدفعي packages.lock.json سنفعل cache (أرسلته لكِ أدناه كـ Patch صغير).
+     
+- name: Setup .NET 8 (with cache)
+  uses: actions/setup-dotnet@v4
+  with:
+    dotnet-version: '8.0.x'
+    cache: true
+
+      # توليد ملفات القفل واستعادة الحزم لكل مشاريع .csproj
+      - name: Restore with lock files for all projects
+        shell: bash
+        run: |
+          set -e
+          PROJS=$(git ls-files '*.csproj' || true)
+          if [ -z "$PROJS" ]; then
+            echo "No .csproj found. Skipping backend steps."
+            exit 0
+          fi
+          echo "Found projects:"
+          echo "$PROJS"
+          echo "$PROJS" | while read -r proj; do
+            echo "Restoring $proj with lock file..."
+            dotnet restore "$proj" --use-lock-file
+          done
+
+      # بناء الحل إن وُجد، وإلّا بناء المشاريع كلٍ على حدة
+      - name: Build solution/projects
+        shell: bash
+        run: |
+          set -e
+          SLNS=$(git ls-files '*.sln' || true)
+          if [ -n "$SLNS" ]; then
+            for sln in $SLNS; do
+              echo "Building solution $sln ..."
+              dotnet build "$sln" --configuration Release --no-restore
+            done
+          else
+            PROJS=$(git ls-files '*.csproj' || true)
+            for proj in $PROJS; do
+              echo "Building project $proj ..."
+              dotnet build "$proj" --configuration Release --no-restore
+            done
+          fi
+
+      # (اختياري) تشغيل الاختبارات إن وُجدت مشاريع Test
+      - name: Test (if test projects exist)
+        shell: bash
+        run: |
+          set -e
+          TESTS=$(git ls-files '*Test*.csproj' || true)
+          if [ -z "$TESTS" ]; then
+            echo "No test projects found. Skipping tests."
+            exit 0
+          fi
+          for t in $TESTS; do
+            echo "Running tests in $t ..."
+            dotnet test "$t" --configuration Release --no-build --no-restore
+          done
