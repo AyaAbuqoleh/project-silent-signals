@@ -11,9 +11,10 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    # نخلي كل الأوامر تشتغل داخل مجلد frontend
     defaults:
       run:
-        working-directory: frontend   # 👈 مهم: كل الأوامر ستعمل داخل frontend/
+        working-directory: frontend
 
     steps:
       - name: Checkout repository
@@ -24,36 +25,37 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'  # 👈 الكاش يعتمد على lock داخل frontend
+          # مهم: مسار الـ lock داخل frontend
+          cache-dependency-path: 'frontend/package-lock.json'
 
-      - name: Install dependencies (npm ci)
+      - name: Install dependencies
         run: npm ci
 
-      # اختياري: تشغيل لينتر/اختبارات إن وجدت
+      # (اختياري) Lint/Test إن وُجدت سكربتاتها
       # - name: Lint
       #   run: npm run lint
-
       # - name: Test
       #   run: npm test -- --ci
 
-      - name: Build (Vite or your build script)
+      # 👇 استخدمي grep (لينكس) لاكتشاف وجود سكربت build
+      - name: Build (if build script exists)
         run: |
-          if npm run | findstr /I "\<build\>" >nul 2>&1; then
+          if npm run | grep -qE '(^| )build( |:)'; then
+            echo "Build script found. Running build..."
             npm run build
           else
             echo "No build script found. Skipping build step."
           fi
 
-      # ارفع ناتج البناء كـ Artifact لو وجد dist/
-      - name: Upload build artifact (if present)
+      # ارفعي ناتج البناء كـ Artifact إذا وُجد مجلد dist/
+      - name: Upload build artifact (if dist exists)
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: |
-            frontend/dist/**
+          path: frontend/dist/**
           if-no-files-found: ignore
 
-      # (اختياري) رفع ملفات الموقع كـ Artifact حتى لو ما في build
+      # (اختياري) ارفعي ملفات السورس أيضًا
       - name: Upload site sources
         uses: actions/upload-artifact@v4
         with:
